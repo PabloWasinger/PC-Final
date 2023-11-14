@@ -62,5 +62,3 @@ init()
 # Actualizar el gráfico de manera interactiva
 while True:
     update()
-
-    
