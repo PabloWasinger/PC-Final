@@ -17,7 +17,7 @@ class Globo(Vehiculos):
 
         # Pedimos las coordenadas y asignamos la posicion del globo
         x_offset, y_offset, z_offset = funciones.get_coords()
-        posicion  = (x >= 0 + x_offset) & (x < 3 + x_offset) & (y >= 0 + y_offset) (y < 3 + y_offset) & (z >= 0 + z_offset) (z < 3 + z_offset)
+        
         
         # Chequear si colisiona con otros objetos o se va fuera del espacio
         colision = funciones.check_collision(posicion)
@@ -44,6 +44,24 @@ class Avion(Vehiculos):
     health = 2
     def __init__(self):
         pass
+
+    def position_avion(indices):
+    
+        x, y, z = indices
+        x_offset, y_offset, z_offset = funciones.get_coords()
+        
+        body_condition = ((x >= 0 + x_offset) & (x < 4 + x_offset) & 
+                        (y >= 1 + y_offset) & (y < 2 + y_offset) & 
+                        (z >= 0 + z_offset) & (z < 1 + z_offset))
+        wing_condition = ((x >= 2 + x_offset) & (x < 3 + x_offset) & 
+                        (y >= 0 + y_offset) & (y < 3 + y_offset) & 
+                        (z >= 0 + z_offset) & (z < 1 + z_offset))
+        tail_condition = ((x >= 0 + x_offset) & (x < 1 + x_offset) & 
+                        (y >= 1 + y_offset) & (y < 2 + y_offset) & 
+                        (z >= 0 + z_offset) & (z < 2 + z_offset))
+
+        # Combinar condiciones para obtener la forma completa del avión
+        airplane_mask = wing_condition | body_condition | tail_condition
 
 class Elevador(Vehiculos):
     health = 4

@@ -4,15 +4,15 @@ import numpy as np
 def create_airplane_mask(x_offset, y_offset, z_offset):
     x, y, z = np.indices((15, 15, 10))
     # Definir condiciones para el avión
-    body_condition = ((x > 0 + x_offset) & (x < 5 + x_offset) & 
-                     (y > 1 + y_offset) & (y < 3 + y_offset) & 
-                     (z > 0 + z_offset) & (z < 2 + z_offset))
-    wing_condition = ((x > 2 + x_offset) & (x < 4 + x_offset) & 
-                     (y > 0 + y_offset) & (y < 4 + y_offset) & 
-                     (z > 0 + z_offset) & (z < 2 + z_offset))
-    tail_condition = ((x > 0 + x_offset) & (x < 2 + x_offset) & 
-                     (y > 1 + y_offset) & (y < 3 + y_offset) & 
-                     (z > 0 + z_offset) & (z < 3 + z_offset))
+    body_condition = ((x >= 0 + x_offset) & (x < 4 + x_offset) & 
+                     (y >= 1 + y_offset) & (y < 2 + y_offset) & 
+                     (z >= 0 + z_offset) & (z < 1 + z_offset))
+    wing_condition = ((x >= 2 + x_offset) & (x < 3 + x_offset) & 
+                     (y >= 0 + y_offset) & (y < 3 + y_offset) & 
+                     (z >= 0 + z_offset) & (z < 1 + z_offset))
+    tail_condition = ((x >= 0 + x_offset) & (x < 1 + x_offset) & 
+                     (y >= 1 + y_offset) & (y < 2 + y_offset) & 
+                     (z >= 0 + z_offset) & (z < 2 + z_offset))
 
     # Combinar condiciones para obtener la forma completa del avión
     airplane_mask = wing_condition | body_condition | tail_condition

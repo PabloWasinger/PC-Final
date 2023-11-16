@@ -8,6 +8,7 @@ class Tableros():
         pass
 
     def crear_tablero(fig):
+        pass
         
 
 
@@ -37,16 +38,6 @@ def crear_tableros():
     hboard.set_title("Player 1 Hitboard")
 
     return pboard, hboard
-
-    
-
-pboard, hboard = crear_tableros()
-
-x, y, z = np.indices((15, 15, 10))
-
-# Draw cuboids in the top left and bottom right corners
-globo1 = (x > 3) & (x < 7) & (y < 3) & (z < 3)
-pboard.voxels(globo1, edgecolor='0.1', alpha = 0.5)
 
 
 
