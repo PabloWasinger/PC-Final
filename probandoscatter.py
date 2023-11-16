@@ -36,16 +36,28 @@ ax.set_ylim(0, y_dim)
 ax.set_zlim(0, z_dim)
 
 plt.ion()
-matriz = np.zeros((15, 15, 10))
-matriz[0:3, 0:3, 0:3] = True
-ax.voxels(matriz, edgecolor='k')
+avion = np.zeros((15, 15, 10))
+#matriz[0:3, 0:3, 0:3] = True
+ax.voxels(avion, edgecolor='k')
 # Show the plot
 plt.show()
 
 
+
+
+avion[0:4, 1, 0] = True
+avion[0][1][1] = True
+avion[2, 0:3, 0] = True
+
+
+
+
+ax.voxels(avion, edgecolor='k')
+
 adasd = input("puto")
 
-matriz[0:3, 0:3, 0:3] = False
-ax.voxels(matriz, edgecolor='k')
+globo = np.zeros((15, 15, 10))
+globo[5:8, 5:8, 5:8] = True
+ax.voxels(globo)
 
 asasd = input()
