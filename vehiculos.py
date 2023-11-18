@@ -19,7 +19,6 @@ def main():
     avion1 = Avion()
     print("Avion 1: ", end='\0')
     avion1.position_plane()
-    avion1.rotar()
 
     molde = zepellin1.posicion + globo1.posicion + avion1.posicion
 
@@ -73,18 +72,43 @@ class Vehiculo():
 
 
     def rotar(self):
-        axes = int(input("Cuantos grados deseas rotar el vehiculo? (0, 90, 180 o 270): ")) # Le pedimos al usuario los grados de rotacion
-        while axes not in (0, 90, 180, 270):
-            axes = input("Error: el numero debe ser (0, 90, 180 o 270)")
+        check = True
+        while check:
+            axes = input("Cuantos grados deseas rotar el vehiculo? (0, 90, 180 o 270): ") # Le pedimos al usuario los grados de rotacion
+            try:
+                axes = int(axes)
+                if axes not in (0, 90, 180, 270):
+                    print("Error: el numero debe ser (0, 90, 180 o 270)")
+                else:
+                    check = False
+            except:
+                print("Error: el numero debe ser (0, 90, 180 o 270)")
         
         rotaciones = axes // 90
         if axes != 0:
+            original_indices = np.where(self.posicion)
+            
             for _ in range(rotaciones): # Rotar 90 grados x veces
                 # Transponer coordenadas x e y de la matriz
                 self.posicion = np.transpose(self.posicion, axes=(1, 0, 2))
                 # Invertir la matriz a lo largo de los ejes especificados
                 self.posicion = np.flip(self.posicion, axis=(0,1))
+                    # Obtiene las coordenadas de los elementos no nulos después de la rotación
+          # Obtiene las coordenadas de los elementos no nulos después de la rotación
+            rotated_indices = np.where(self.posicion)
+
+            # Calcula el desplazamiento necesario para mantener la posición
+            shift_values = (
+                original_indices[0][0] - rotated_indices[0][0],
+                original_indices[1][0] - rotated_indices[1][0],
+                original_indices[2][0] - rotated_indices[2][0]
+            )
+
+            # Ajusta la posición para compensar el cambio debido a la rotación
+            self.posicion = np.roll(self.posicion, shift=shift_values, axis=(0, 1, 2))
+
         self.indices = np.where(self.posicion)
+        
 
 
 
@@ -116,7 +140,7 @@ class Avion(Vehiculo):
         body, wing, tail = self.body, self.wing, self.tail
         check = True
         while check:
-            x, y, z = funciones.get_coords()
+            x, y, z = funciones.get_coords(self.clase)
             # Definimos la forma del avion
             self.posicion[(body[0] + x):(body[1] + x), (body[2] + y):(body[3] + y), (body[4] + z):(body[5] + z)] = True
             self.posicion[(wing[0] + x):(wing[1] + x), (wing[2] + y):(wing[3] + y), (wing[4] + z):(wing[5] + z)] = True
