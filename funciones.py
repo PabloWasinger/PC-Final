@@ -1,24 +1,31 @@
+
+def main():
+    pass
+
 def get_coords():
     """Pide y devuelve coordenadas de modo x y z"""
-    coords = input()
-    check = True
 
-    while check:
-        sep = coords.split(" ")
-        #Chequear si todos los valores ingresados son enteros
-        enteros = True
+    while True:
+        coords = input()
+
+        splitcoords = coords.split()
         try:
-            [int(x) for x in sep]
-        except:
-            enteros = False
-        
-        if len(sep) != 3 or not enteros: # Si no son todos enteros o no se ingresaron 3 valores
-            print("Las coordenadas deben ser enteros de modo (x y z)")
-            coords = input("Reingresar coordenadas: ") #Pedir coordenadas devuelta
-            continue
-        check = False
+            x, y, z = map(int, splitcoords)
 
-    return sep
+            break
+
+        except:
+            print("Las coordenadas deben ser enteros de modo (x y z)\nReingresar coordenadas: ", end = '\0')
+
+    return x, y, z
 
 def check_collision():
+    """Chequea si colisiona con un obejto o se va fuera del mapa
+    DEvuelve 0 si no hay colisiones
+    Devuelve 1 si colisiona con un objeto
+    DEvuelve 2 si se va fuera del mapa"""
     pass
+
+
+if __name__ == "__main__":
+    main()

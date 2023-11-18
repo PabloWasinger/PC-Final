@@ -51,6 +51,12 @@ ax.set_xlabel("x label")
 ax.set_ylabel("y label")
 ax.set_zlabel("z label")
 
+
+
+
+
+
+
 # Modo interactivo
 plt.ion()
 
