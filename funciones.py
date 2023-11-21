@@ -31,7 +31,19 @@ def check_collision():
     Devuelve 1 si colisiona con un objeto
     DEvuelve 2 si se va fuera del mapa"""
     
-    pass
+    #primero para ver si los coordinaciones estan en la mapa
+
+    if not (0 <= x < board.shape[0] and 0 <= y < board.shape[1] and 0 <= z < board.shape[2]):
+        return 2
+
+    #necesito ver si hay un occupied cell, no se el codigo para esto
+
+    if _:
+        return 1
+
+    else:
+        return 0
+
 
 
 if __name__ == "__main__":
