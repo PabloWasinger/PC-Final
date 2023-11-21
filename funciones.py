@@ -1,4 +1,4 @@
-
+import numpy as np
 def main():
     pass
 
@@ -25,25 +25,39 @@ def get_coords(clase):
                 print("Las coordenadas deben ser enteros de modo (x y z)\nReingresar coordenadas: ", end = '\0')
     return x, y, z
 
-def check_collision():
-    """Chequea si colisiona con un obejto o se va fuera del mapa
+def check_hit(molde, coordenadas, lista_vehiculos):
+    """
+    recibe las coordenadas del disparo,
+    si hay un vehiculo retorna el vehiculo,
+    si no lo encuentra, retorna False
+    """
+
+    if molde [coordenadas[0]] [coordenadas[1]] [coordenadas[2]] == 1: #chequeo si el valor ingresado es True
+        for vehiculo in lista_vehiculos:
+            if vehiculo [coordenadas[0]] [coordenadas[1]] [coordenadas[2]] == 1:
+                return vehiculo
+    else:
+        return False
+
+
+
+
+def check_collision(molde, vehiculo):
+    """
+    Chequea si colisiona con un obejto o se va fuera del mapa
     DEvuelve 0 si no hay colisiones
     Devuelve 1 si colisiona con un objeto
     DEvuelve 2 si se va fuera del mapa"""
+
+    suma = np.sum(vehiculo.posicion) #sumo la cantidad de valores True que tiene la matriz
     
-    #primero para ver si los coordinaciones estan en la mapa
+    if suma == vehiculo.cuadrados: #comparo la cantidad de valores True que tiene la matriz con la que debería tener
+        valor_comun = np.any (molde & vehiculo.posicion) #veo si la matriz tiene algún valor igual que el molde en alguna posicion
+        return int(valor_comun) #retorno 0 o 1 
+    return 2
 
-    if not (0 <= x < board.shape[0] and 0 <= y < board.shape[1] and 0 <= z < board.shape[2]):
-        return 2
-
-    #necesito ver si hay un occupied cell, no se el codigo para esto
-
-    if _:
-        return 1
-
-    else:
-        return 0
-
+def actualizar_pantalla():
+    pass
 
 
 if __name__ == "__main__":
