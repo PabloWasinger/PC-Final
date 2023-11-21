@@ -5,15 +5,14 @@ import numpy as np
 
 class Tableros():
     def __init__(self):
-        pass
-
-    def crear_tablero(fig):
+        self.tablero = np.zeros((15, 15, 10))
         pass
         
 
 
 class HitBoard(Tableros):
     def __init__(self):
+
         super().__init__()
 
 class Playerboard(Tableros):
@@ -39,6 +38,6 @@ def crear_tableros():
 
     return pboard, hboard
 
-
+crear_tableros()
 
 plt.show()
