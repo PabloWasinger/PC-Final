@@ -4,44 +4,7 @@ import funciones
 import tableros
 
 def main():
-    fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-
-    np.set_printoptions(threshold=np.inf)
-    tableroprueba = tableros.PlayerBoard("Player")
-    zepellin1 = Zeppelin("ZEPPELIN_1")
-    print("Zeppelin 1: ", end='\0')
-    zepellin1.position_vehicle(tableroprueba)
-
-
-    globo1 = Globo("GLOBO_1")
-    print("Globo 1: ", end='\0')
-    globo1.position_vehicle(tableroprueba)
-
-    avion1 = Avion("AVION_1")
-    print("Avion 1: ", end='\0')
-    avion1.position_plane(tableroprueba)
-
-    molde = zepellin1.posicion + globo1.posicion + avion1.posicion
-
-    colors = np.empty(molde.shape, dtype=object)
-
-    colors[avion1.indices] = "white"  # Set colors for zeppelin1 and globo1
-    # Set colors for zeppelin1 and globo1
-    for index in zip(*zepellin1.indices):
-        colors[index] = zepellin1.color
-
-    for index in zip(*globo1.indices):
-        colors[index] = globo1.color
-        
-    for index in zip(*avion1.indices):
-        colors[index] = avion1.color
-
-    
-
-    # Plot the voxels with different colors
-    voxels = ax.voxels(molde, facecolors=colors, edgecolor='k')
-
-    plt.show()
+    pass
 
 
 
@@ -87,7 +50,6 @@ class Vehiculo():
         
             if axes != 0:
                 original_indices = np.where(self.posicion.copy())  # Hacemos una copia de la posición original
-                print(original_indices[1])
 
                 # Rotar según la cantidad de grados especificada
                 if axes == 90:
@@ -103,7 +65,6 @@ class Vehiculo():
 
                 # Obtiene las coordenadas de los elementos no nulos después de todas las rotaciones
                 rotated_indices = np.where(self.posicion)
-                print(rotated_indices[1])
                 
                 try:
                     # Calcula el desplazamiento necesario para mantener la posición

@@ -4,14 +4,7 @@ import numpy as np
 import funciones
 
 def main():
-
-    fig = plt.figure()
-    hitboard = HitBoard()
-    playerboard = PlayerBoard()
-    hitboard.dibujar_tablero(fig)
-    playerboard.dibujar_tablero(fig)
-
-    plt.show()
+    pass
 
 
 class Tableros():
