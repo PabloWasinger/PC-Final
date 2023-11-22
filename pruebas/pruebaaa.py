@@ -1,12 +1,4 @@
-import numpy as np
+ashe = [[1,2],
+        [2,3]]
 
-
-wachin = np.zeros((2, 2, 2))
-colombiano = np.zeros((2, 2, 2))
-
-wachin[0, 0, 0] = 1
-
-teo = wachin + colombiano
-
-print(teo)
-
+god = []

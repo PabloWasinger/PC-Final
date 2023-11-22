@@ -1,42 +1,40 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import funciones
+import tableros
 
 def main():
     fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 
     np.set_printoptions(threshold=np.inf)
-
+    tableroprueba = tableros.PlayerBoard("Player")
     zepellin1 = Zeppelin("ZEPPELIN_1")
     print("Zeppelin 1: ", end='\0')
-    zepellin1.position_vehicle()
+    zepellin1.position_vehicle(tableroprueba)
 
 
     globo1 = Globo("GLOBO_1")
     print("Globo 1: ", end='\0')
-    globo1.position_vehicle()
+    globo1.position_vehicle(tableroprueba)
 
     avion1 = Avion("AVION_1")
     print("Avion 1: ", end='\0')
-    avion1.position_plane()
+    avion1.position_plane(tableroprueba)
 
     molde = zepellin1.posicion + globo1.posicion + avion1.posicion
 
     colors = np.empty(molde.shape, dtype=object)
 
-    colors[avion1.indices] = "red"
-    print(avion1.indices)
-    print(molde.shape)
-
-    # Set colors for zeppelin1 and globo1
+    colors[avion1.indices] = "white"  # Set colors for zeppelin1 and globo1
     # Set colors for zeppelin1 and globo1
     for index in zip(*zepellin1.indices):
-        colors[index] = (1, 0, 0, 0.5)
+        colors[index] = zepellin1.color
 
     for index in zip(*globo1.indices):
-        colors[index] = (0, 1, 0, 0.3)
+        colors[index] = globo1.color
         
-    colors[1][1][1] = (1, 0, 0, 1)
+    for index in zip(*avion1.indices):
+        colors[index] = avion1.color
 
     
 
@@ -51,14 +49,15 @@ def main():
 class Vehiculo():
     issunken = False
     def __init__(self, objeto):
-        self.posicion = np.zeros((15, 15, 10))
+        self.posicion = np.zeros((15, 15, 10), dtype=bool)
         self.indices = 0
         self.molde = 0
         self.clase = None
         self.objeto = objeto
         self.cuadrados = 0
+        self.health = 0
 
-    def position_vehicle(self):
+    def position_vehicle(self, tablero):
         offset = self.molde
         check = True
         while check: # While para chequear que no colisione
@@ -67,9 +66,9 @@ class Vehiculo():
         
             if self.clase == "zeppelin":
                 self.rotar()
-            check = False
-            #check = funciones.check_collision() # Chequear si colisiona, pedir coordenadas devuelta si lo hace
-        
+                
+            check = funciones.check_collision(tablero, self) # Chequear si colisiona, pedir coordenadas devuelta si lo hace
+            
         self.indices = np.where(self.posicion) # Variable con los indices de la posicion
 
 
@@ -81,40 +80,50 @@ class Vehiculo():
                 axes = int(axes)
                 if axes not in (0, 90, 180, 270):
                     print("Error: el numero debe ser (0, 90, 180 o 270)")
-                else:
-                    check = False
+                    continue
             except:
                 print("Error: el numero debe ser (0, 90, 180 o 270)")
+                continue
         
-        if axes != 0:
-            original_indices = np.where(self.posicion.copy())  # Hacemos una copia de la posición original
+            if axes != 0:
+                original_indices = np.where(self.posicion.copy())  # Hacemos una copia de la posición original
+                print(original_indices[1])
 
-            # Rotar según la cantidad de grados especificada
-            if axes == 90:
-                self.posicion = np.transpose(self.posicion, axes=(1, 0, 2))
-                self.posicion = np.flip(self.posicion, axis=(0, 1))
-            elif axes == 180:
-                self.posicion = np.transpose(self.posicion, axes=(1, 0, 2))
-                self.posicion = np.flip(self.posicion, axis=(0, 1))
-                self.posicion = np.transpose(self.posicion, axes=(1, 0, 2))
-            elif axes == 270:
-                self.posicion = np.transpose(self.posicion, axes=(1, 0, 2))
+                # Rotar según la cantidad de grados especificada
+                if axes == 90:
+                    self.posicion = np.transpose(self.posicion, axes=(1, 0, 2))
+                    self.posicion = np.flip(self.posicion, axis=(0, 1))
+                elif axes == 180:
+                    self.posicion = np.transpose(self.posicion, axes=(1, 0, 2))
+                    self.posicion = np.flip(self.posicion, axis=(0, 1))
+                    self.posicion = np.transpose(self.posicion, axes=(1, 0, 2))
+                elif axes == 270:
+                    self.posicion = np.transpose(self.posicion, axes=(1, 0, 2))
 
 
-            # Obtiene las coordenadas de los elementos no nulos después de todas las rotaciones
-            rotated_indices = np.where(self.posicion)
+                # Obtiene las coordenadas de los elementos no nulos después de todas las rotaciones
+                rotated_indices = np.where(self.posicion)
+                print(rotated_indices[1])
+                
+                try:
+                    # Calcula el desplazamiento necesario para mantener la posición
+                    shift_values = (
+                        original_indices[0][0] - rotated_indices[0][0],
+                        original_indices[1][0] - rotated_indices[1][0],
+                        original_indices[2][0] - rotated_indices[2][0]
+                    )
 
-            # Calcula el desplazamiento necesario para mantener la posición
-            shift_values = (
-                original_indices[0][0] - rotated_indices[0][0],
-                original_indices[1][0] - rotated_indices[1][0],
-                original_indices[2][0] - rotated_indices[2][0]
-            )
-
-            # Ajusta la posición para compensar el cambio debido a la rotación
-            self.posicion = np.roll(self.posicion, shift=shift_values, axis=(0, 1, 2))
+                except:
+                    print("Error: el vehiculo debe estar dentro del mapa")
+                    check = True
+                    continue
+                # Ajusta la posición para compensar el cambio debido a la rotación
+                self.posicion = np.roll(self.posicion, shift=shift_values, axis=(0, 1, 2))
+            check = False
+            
 
         self.indices = np.where(self.posicion)
+    
 
 
 
@@ -123,30 +132,32 @@ class Globo(Vehiculo):
         super().__init__(objeto)
         self.clase = "globo"
         self.molde = (0, 3, 0, 3, 0, 3)
-        self.color = "blue"
+        self.color = (0.2, 0.4, 0.7 ,0.8)
         self.cuadrados = 27
+        self.health = 1
 
 class Zeppelin(Vehiculo):
     def __init__(self, objeto):
         super().__init__(objeto)
         self.clase = "zeppelin"
         self.molde = (0, 5, 0, 2, 0, 2)
-        self.color = 'red'
+        self.color = (1, 0.4, 0.4 ,0.8)
         self.cuadrados = 20
+        self.health = 3
 
 
 class Avion(Vehiculo):
     def __init__(self, objeto):
         super().__init__(objeto)
         self.clase = "avion"
-        self.color = 'white'
+        self.color = (0.8, 0.8, 0.8, 0.8)
         self.body = (0, 4, 1, 2, 0, 1) 
         self.wing = (2, 3, 0, 3, 0, 1)
         self.tail = (0, 1, 1, 2, 0, 2)
-        self.indices = 0
         self.cuadrados = 7
+        self.health = 2
 
-    def position_plane(self):
+    def position_plane(self, tablero):
         body, wing, tail = self.body, self.wing, self.tail
         check = True
         while check:
@@ -157,8 +168,7 @@ class Avion(Vehiculo):
             self.posicion[(tail[0] + x):(tail[1] + x), (tail[2] + y):(tail[3] + y), (tail[4] + z):(tail[5] + z)] = True
 
             self.rotar()
-            check = False
-            #check = funciones.check_collision()
+            check = funciones.check_collision(tablero, self)
         
         self.indices = np.where(self.posicion)
         
@@ -168,9 +178,13 @@ class Elevador(Vehiculo):
     def __init__(self, objeto):
         super().__init__(objeto)
         self.clase = "elevador"
-        self.molde(0, 1, 0, 1, 0, 10)
-        self.color = "gray"
+        self.molde = (0, 1, 0, 1, 0, 10)
+        self.color = (0.2, 0.2, 0.2, 0.8)
         self.cuadrados = 10
+        self.health = 4
+
+
+
 
 if __name__ == "__main__":
     main()
