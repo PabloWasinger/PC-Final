@@ -1,4 +1,4 @@
-import numpy as np
+
 import random
 
 def next_turn(hit_board: tuple) -> tuple:
@@ -17,8 +17,12 @@ def next_turn(hit_board: tuple) -> tuple:
     Returns:
         tuple: (x,y,z) to shoot at.
     """
+    x, y, z = (random.randint(0,15), random.randint(0,15), random.randint(0,10))
 
-    
+    while hit_board [x][y][z] != "?":
+        x, y, z = (random.randint(0,15), random.randint(0,15), random.randint(0,10))
+    return (x,y,z)
+
 
 
 
@@ -36,5 +40,21 @@ def get_starting_board():
         tuple: A tuple of tuples of tuples of strings representing the board.
         Each cell can be accessed by board[x][y][z].
     """
-
     
+
+
+
+def rand_coords(clase=None):
+    """Pide y devuelve coordenadas de modo (x y z) o (x y) si es un elevador"""
+
+    while True:
+        x,y,z = random.randint(0,15),random.randint(0,15),random.randint(0,10)
+        coords = x,y,z 
+        splitcoords = coords.split()
+        if clase == "elevador":
+            x, y = (map(int, splitcoords))
+            z = 0
+        else:
+            x, y, z = (map(int, splitcoords))
+            
+    return x, y, z

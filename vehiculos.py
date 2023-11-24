@@ -31,7 +31,6 @@ class Vehiculo():
                 self.rotar()
                 
             check = funciones.check_collision(tablero, self) # Chequear si colisiona, pedir coordenadas devuelta si lo hace
-            
         self.indices = np.where(self.posicion) # Variable con los indices de la posicion
 
 

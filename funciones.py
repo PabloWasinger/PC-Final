@@ -31,22 +31,18 @@ def get_coords(clase=None):
 
 
 
-def check_hit(tablero, coordenadas):
+def check_hit(hitboard, playerboard, coordenadas):
     """
     recibe las coordenadas del disparo,
     si hay un vehiculo retorna el vehiculo,
     si no lo encuentra, retorna empty
     """
     x, y, z = coordenadas
-    hit_bin = tablero.binario[x][y][z]
+    if hitboard.binario[x][y][z] == True:
+        print("Ya disparaste a esta posicion!")
+        return 0
     
-    while hit_bin == 1:
-        print("Ya disparaste a esta posición!\nReescribe coordenadas: ")
-        coordenadas = get_coords()
-        x, y, z = coordenadas
-        hit_bin = tablero.binario [x] [y] [z]
-    
-    hit_str = tablero.strings[x][y][z]    
+    hit_str = playerboard.strings[x][y][z]    
 
     return hit_str
 
@@ -64,7 +60,7 @@ def check_collision(tablero, vehiculo):
     posicion = vehiculo.posicion
     suma = np.sum(posicion) #sumo la cantidad de valores True que tiene la matriz
     if suma == vehiculo.cuadrados: #comparo la cantidad de valores True que tiene la matriz con la que debería tener
-        valor_comun = np.any(molde & posicion) #veo si la matriz tiene algún valor igual que el molde en alguna posicion
+        valor_comun = np.any(molde & posicion) #veo si la matriz tiene algún valor igual en el molde y en alguna posicion
         if valor_comun:
             print ("El vehículo colisiona con otro!\nReescribe las coordenadas: ", end='\0')
             vehiculo.posicion = np.zeros((15, 15, 10), dtype=bool) # Reinicia la posicion del vehiculo
@@ -79,34 +75,34 @@ def check_collision(tablero, vehiculo):
 
 
 def crear_objetos_jugador(vehiculos_jugador, playerboard_jugador):
-    for i in range(5):
-        nombre = f"BALLOON_{i + 1}" # Nombre del objeto
+    for i in range(1):
+        nombre = f"BALLOON_{i}" # Nombre del objeto
         vehiculos_jugador[nombre] = vehiculos.Globo(nombre) # Crear objeto y agregarlo al diccionario
-        print(f"Globo {i+1}: ", end = '\0') # Pedir coordenadas
+        print(f"Globo {i} (x y z): ", end = '\0') # Pedir coordenadas
         vehiculos_jugador[nombre].position_vehicle(playerboard_jugador) # Posicionar vehiculo
         playerboard_jugador.draw_vehicle(vehiculos_jugador[nombre]) # Dibujar vehiculo
         dibujar_playerboard(playerboard_jugador)
         
-    for i in range(3):
-        nombre = f"PLANE_{i+1}"
+    for i in range(1):
+        nombre = f"PLANE_{i}"
         vehiculos_jugador[nombre] = vehiculos.Avion(nombre)
-        print(f"Avion {i + 1}: ", end = '\0')
+        print(f"Avion {i} (x y z): ", end = '\0')
         vehiculos_jugador[nombre].position_plane(playerboard_jugador)
         playerboard_jugador.draw_vehicle(vehiculos_jugador[nombre])
         dibujar_playerboard(playerboard_jugador)
         
-    for i in range(2):
-        nombre = f"ZEPPELIN_{i+1}"
+    for i in range(1):
+        nombre = f"ZEPPELIN_{i}"
         vehiculos_jugador[nombre] = vehiculos.Zeppelin(nombre)
-        print(f"Zeppelin {i+1}: ", end = '\0')
+        print(f"Zeppelin {i} (x y z): ", end = '\0')
         vehiculos_jugador[nombre].position_vehicle(playerboard_jugador)
         playerboard_jugador.draw_vehicle(vehiculos_jugador[nombre])
         dibujar_playerboard(playerboard_jugador)
     
     for i in range(1):
-        nombre = f"ELEVATOR_{i+1}"
+        nombre = f"ELEVATOR"
         vehiculos_jugador[nombre] = vehiculos.Elevador(nombre)
-        print(f"Elevador {i+1}: ", end = '\0')
+        print(f"Elevador (x y): ", end = '\0')
         vehiculos_jugador[nombre].position_vehicle(playerboard_jugador)
         playerboard_jugador.draw_vehicle(vehiculos_jugador[nombre])
         dibujar_playerboard(playerboard_jugador)
@@ -114,36 +110,7 @@ def crear_objetos_jugador(vehiculos_jugador, playerboard_jugador):
 
 
 
-def next_turn(hit_board: tuple) -> tuple:
-    """Returns the coordinates to shoot next.
 
-    Args:
-        hit_board (tuple): A 3D iterable of strings representing the hit board.
-        Each cell can be accessed by hit_board[x][y][z].
-
-        Each cell has 4 possible values:
-        - '?': No shot has been done there.
-        - 'HIT': An airship has been hit there before.
-        - 'MISS': A shot has been done there but did not hit any airship.
-        - 'SUNK': An airship was there but has already been shot down entirely.
-
-    Returns:
-        tuple: (x,y,z) to shoot at.
-    """
-
-def get_starting_board():
-    """
-    Gives the board with the airships placed on it. The board is a 3D iterable of 
-    strings. 
-
-    Each cell has 12 possible values: 'EMPTY', 'BALLOON_0', 'BALLOON_1',
-    'BALLOON_2', 'BALLOON_3' 'BALLOON_4', 'ZEPPELIN_0', 'ZEPPELIN_1', 'PLANE_0',
-    'PLANE_1', 'PLANE_2', 'ELEVATOR'.
-
-    Returns:
-        tuple: A tuple of tuples of tuples of strings representing the board.
-        Each cell can be accessed by board[x][y][z].
-    """
     
 
 def dibujar_playerboard(playerboard):
@@ -163,6 +130,9 @@ def dibujar_hitboard(hitboard):
     hitboard.plotboard.voxels(hitboard.binario, facecolors=hitboard.colors, edgecolors='k')
     plt.gcf().canvas.draw_idle()  # Indica a Matplotlib que la figura debe ser actualizada
     plt.pause(0.1)  # Pausa para permitir la actualización en tiempo real
+
+
+
 
 if __name__ == "__main__":
     main()

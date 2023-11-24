@@ -11,7 +11,6 @@ class Tableros():
     def __init__(self, jugador):
         self.jugador = jugador # Es jugador o computadora?
         self.binario = np.zeros((15, 15, 10), dtype=bool) # Tablero con 1s y 0s donde hay o no valores ocupados correspondientemente
-        self.strings = None # Tablero con strings, (nombre de vehiculo o hits)
         self.plotboard = None # Plot para dibujar usando matplotlib
         self.titulo = None # Titulo del tablero
         self.posicion = None # Posicion del tablero en la figura
