@@ -1,4 +1,4 @@
-
+import numpy as np
 import random
 
 def next_turn(hit_board: tuple) -> tuple:
@@ -40,6 +40,7 @@ def get_starting_board():
         tuple: A tuple of tuples of tuples of strings representing the board.
         Each cell can be accessed by board[x][y][z].
     """
+    board = np.full((15, 15, 10), 'EMPTY', dtype='str')
     
 
 

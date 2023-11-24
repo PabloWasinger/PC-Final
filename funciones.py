@@ -1,6 +1,7 @@
 import numpy as np
 import vehiculos
 import matplotlib.pyplot as plt
+import computer
 
 def main():
     pass
@@ -31,11 +32,12 @@ def get_coords(clase=None):
 
 
 
-def check_hit(hitboard, playerboard, coordenadas):
+def check_hit(coordenadas, hitboard, playerboard):
     """
-    recibe las coordenadas del disparo,
-    si hay un vehiculo retorna el vehiculo,
-    si no lo encuentra, retorna empty
+    Chequear si hubo un hit con las coordenadas pasadas.
+    Recibe unas coordenadas como x y z
+    Recibe el hitboard del que disparó
+    Recibe el playerboard del que recibió el tiro
     """
     x, y, z = coordenadas
     if hitboard.binario[x][y][z] == True:
@@ -78,34 +80,37 @@ def crear_objetos_jugador(vehiculos_jugador, playerboard_jugador):
     for i in range(1):
         nombre = f"BALLOON_{i}" # Nombre del objeto
         vehiculos_jugador[nombre] = vehiculos.Globo(nombre) # Crear objeto y agregarlo al diccionario
-        print(f"Globo {i} (x y z): ", end = '\0') # Pedir coordenadas
+        print(f"- Globo {i} (x y z): ", end = '\0') # Pedir coordenadas
         vehiculos_jugador[nombre].position_vehicle(playerboard_jugador) # Posicionar vehiculo
         playerboard_jugador.draw_vehicle(vehiculos_jugador[nombre]) # Dibujar vehiculo
+        dibujar_playerboard(playerboard_jugador)
+
+
+    for i in range(1):
+        nombre = f"ZEPPELIN_{i}"
+        vehiculos_jugador[nombre] = vehiculos.Zeppelin(nombre)
+        print(f"- Zeppelin {i} (x y z): ", end = '\0')
+        vehiculos_jugador[nombre].position_vehicle(playerboard_jugador)
+        playerboard_jugador.draw_vehicle(vehiculos_jugador[nombre])
         dibujar_playerboard(playerboard_jugador)
         
     for i in range(1):
         nombre = f"PLANE_{i}"
         vehiculos_jugador[nombre] = vehiculos.Avion(nombre)
-        print(f"Avion {i} (x y z): ", end = '\0')
+        print(f"- Avion {i} (x y z): ", end = '\0')
         vehiculos_jugador[nombre].position_plane(playerboard_jugador)
         playerboard_jugador.draw_vehicle(vehiculos_jugador[nombre])
         dibujar_playerboard(playerboard_jugador)
         
-    for i in range(1):
-        nombre = f"ZEPPELIN_{i}"
-        vehiculos_jugador[nombre] = vehiculos.Zeppelin(nombre)
-        print(f"Zeppelin {i} (x y z): ", end = '\0')
-        vehiculos_jugador[nombre].position_vehicle(playerboard_jugador)
-        playerboard_jugador.draw_vehicle(vehiculos_jugador[nombre])
-        dibujar_playerboard(playerboard_jugador)
     
     for i in range(1):
         nombre = f"ELEVATOR"
         vehiculos_jugador[nombre] = vehiculos.Elevador(nombre)
-        print(f"Elevador (x y): ", end = '\0')
+        print(f"- Elevador (x y): ", end = '\0')
         vehiculos_jugador[nombre].position_vehicle(playerboard_jugador)
         playerboard_jugador.draw_vehicle(vehiculos_jugador[nombre])
         dibujar_playerboard(playerboard_jugador)
+
 
 
 
@@ -131,6 +136,66 @@ def dibujar_hitboard(hitboard):
     plt.gcf().canvas.draw_idle()  # Indica a Matplotlib que la figura debe ser actualizada
     plt.pause(0.1)  # Pausa para permitir la actualización en tiempo real
 
+
+
+def reproducir_partida(playerboard_jugador, hitboard_jugador, playerboard_computer, hitboard_computer, vehiculos_jugador, vehiculos_computadora):
+    """Comienza el juego yendo turno por turno. Devuelve el ganador cuando hunde todos los vehiculos"""
+    turno = 0
+    j = "Disparo Jugador 1"
+    c = "Disparo Computadora"
+    while True:
+
+        # Turno del jugador
+        if turno % 2 == 0:
+            print(f"{j}\n{'-' * len(j)}")
+            print("Coordenadas (x y z): ")
+            coords = get_coords()
+            disparo = check_hit(coords, hitboard_jugador, playerboard_computer)
+            if not disparo or disparo == "EMPTY":
+                print("Resultado: Errado")
+                hitboard_jugador.shoot_board(coords, None) # Actualizo el hitboard
+            
+            else:
+                vehiculo = vehiculos_computadora[disparo] #Conseguir el vehiculo del diccionario
+                vehiculo.health -= 1 # Restarle 1 de vida
+                hitboard_jugador.shoot_board(coords, vehiculo) # Actualizar hitboard
+
+                if vehiculo.health == 0: # Si se hundió el veihculo
+                    print("Resultado: Hundido")
+                    playerboard_computer.vida -= 1 # Restar un vehiculo a la computadora
+
+                    if playerboard_computer.vida == 0: # Si se quedó sin vehiculos devuelve el ganador
+                        return "PLAYER"
+                else:
+                    print("Resultado: Tocado")
+            
+
+        # Turno de la computadora
+        else:
+            print(f"{j}\n{'-' * len(j)}")
+            coords = computer.next_turn(hitboard_computer.strings)
+            print(f"Coordenadas: {coords[0]} {coords[1]} {coords[2]}")
+            disparo = check_hit(coords, hitboard_computer, playerboard_jugador)
+
+            if not disparo or disparo == "EMPTY":
+                print("Resultado: Errado")
+                hitboard_computer.shoot_board(coords, None)
+            
+            else:
+                vehiculo = vehiculos_jugador[disparo]
+                vehiculo.health -= 1
+                hitboard_computer.shoot_board(coords, vehiculo)
+                playerboard_jugador.recibir_tiro(coords, vehiculo)
+
+                if vehiculo.health == 0:
+                    print("Resultado: Hundido")
+                    playerboard_jugador.vida -= 1
+
+                    if playerboard_jugador.vida == 0:
+                        return "COMPUTER"
+                    
+                else:
+                    print("Resultado: Tocado")
 
 
 

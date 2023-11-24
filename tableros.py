@@ -36,7 +36,7 @@ class HitBoard(Tableros):
         self.titulo = "Player 1 Hitboard"
         self.posicion = (1, 2, 2)
     
-    def shoot_board(self, coords, vehiculo):
+    def shoot_board(self, coords:tuple, vehiculo):
         """Actualiza el hitboard en base si se hundio el vehiculo, hubo o no hubo hit. 
         En caso de que el tablero sea del jugador, pinta los cambios en pantalla"""
 
@@ -44,7 +44,7 @@ class HitBoard(Tableros):
 
         if vehiculo: # Si hubo hit
 
-            if vehiculo.issunken(): # Si se hundió el vehiculo
+            if vehiculo.health == 0: # Si se hundió el vehiculo
                 mask = vehiculo.binario != 0 # Posicion del vehiculo
                 self.binario[mask] = True # Asigna todos las posiciones del vehiculo
                 self.strings[mask] = "SUNK"
@@ -93,9 +93,8 @@ class PlayerBoard(Tableros):
 
 
 
-    def recibir_tiro(self, coords, vehiculos, hit):
+    def recibir_tiro(self, coords, vehiculo):
         """Pinta el vehiculo de gris si se hundio, sino pinta la zona del hit de verde."""
-        vehiculo = vehiculos[hit]
 
         if vehiculo.health == 0: # Si se hundio el vehiculo oscurecerlo
             for index in zip(*vehiculo.indices):
@@ -106,6 +105,11 @@ class PlayerBoard(Tableros):
         
         funciones.dibujar_playerboard(self)
 
+
+    def map_computer_board(self):
+        """Convierte el mapa de strings creado por la computadora a uno binario"""
+        mask = self.strings != "EMPTY"
+        self.binario[mask] = True
             
 
         

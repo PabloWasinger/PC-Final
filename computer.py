@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import vehiculos
 
 def next_turn(hit_board: tuple) -> tuple:
     """Returns the coordinates to shoot next.
@@ -37,4 +38,19 @@ def get_starting_board():
         Each cell can be accessed by board[x][y][z].
     """
 
-    
+
+def get_vehicles():
+    """Crea un diccionario con todos los vehiculos como objetos"""
+    veihculos = {}
+    for i in range(5):
+        vehiculos[f"BALLOON_{i}"] = vehiculos.Globo()
+
+    for i in range(2):
+        vehiculos[f"ZEPPELIN_{i}"] = vehiculos.Zeppelin()
+
+    for i in range(3):
+        vehiculos[f"PLANE_{i}"] = vehiculos.Avion()
+
+    vehiculos[f"ELEVATOR"] = vehiculos.Elevador()
+
+    return vehiculos
