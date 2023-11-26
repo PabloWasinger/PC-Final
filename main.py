@@ -49,7 +49,7 @@ def main():
     time.sleep(2)
     playerboard_computer.strings = computer.get_starting_board()
     playerboard_computer.map_computer_board()
-    vehiculos_computadora = computer.get_vehicles()
+    vehiculos_computadora = computer.get_vehicles(playerboard_computer.strings)
     print("Empecemos!")
     time.sleep(1)
 

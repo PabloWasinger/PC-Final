@@ -1,5 +1,7 @@
 import numpy as np
 import random
+import funciones
+
 
 def next_turn(hit_board: tuple) -> tuple:
     """Returns the coordinates to shoot next.
@@ -41,6 +43,29 @@ def get_starting_board():
         Each cell can be accessed by board[x][y][z].
     """
     board = np.full((15, 15, 10), 'EMPTY', dtype='str')
+        
+    molde1 = (0, 3, 0, 3, 0, 3)
+    x,y,z=5,5,5
+    board[(molde1[0] + x): (molde1[1] + x), (molde1[2] + y):(molde1[3] + y), (molde1[4] + z):(molde1[5] + z)] = "GLOBO" 
+
+    molde2 = (0, 5, 0, 2, 0, 2)
+    x,y,z=5,5,0
+    board[(molde2[0] + x): (molde2[1] + x), (molde2[2] + y):(molde2[3] + y), (molde2[4] + z):(molde2[5] + z)] = "ZEPPELIN"
+        
+    molde3 = (0, 1, 0, 1, 0, 10)
+    x,y,z=14,14,0
+    board[(molde3[0] + x): (molde3[1] + x), (molde3[2] + y):(molde3[3] + y), (molde3[4] + z):(molde3[5] + z)] = "ELEVATOR"
+
+    body = (0, 4, 1, 2, 0, 1) 
+    wing = (2, 3, 0, 3, 0, 1)
+    tail = (0, 1, 1, 2, 0, 2)
+    x,y,z=0,0,0
+    board[(body[0] + x):(body[1] + x), (body[2] + y):(body[3] + y), (body[4] + z):(body[5] + z)] = "PLANE"
+    board[(wing[0] + x):(wing[1] + x), (wing[2] + y):(wing[3] + y), (wing[4] + z):(wing[5] + z)] = "PLANE"
+    board[(tail[0] + x):(tail[1] + x), (tail[2] + y):(tail[3] + y), (tail[4] + z):(tail[5] + z)] = "PLANE"
+
+
+
     
 
 

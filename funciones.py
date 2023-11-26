@@ -2,13 +2,23 @@ import numpy as np
 import vehiculos
 import matplotlib.pyplot as plt
 import computer
+from typing import Optional
 
 def main():
     pass
 
-def get_coords(clase=None):
-    """Pide y devuelve coordenadas de modo (x y z) o (x y) si es un elevador"""
+def get_coords(clase:Optional[str]=None) -> tuple:
+    """
+    La funcion solicita al usuario las coordenadas en formato (x,y,z).
 
+    Recibe:
+    - clase: que define las coordenadas esperadas. Si es un elevador, se esperan dos coordenadas (x,y),
+    de lo contrario, se esperan tres (x,y,z).
+
+    Retorna:
+    - Una tupla con las coordenadas ingresadas convertidas a enteros.
+    
+    """
     while True:
         coords = input()
 
@@ -32,19 +42,25 @@ def get_coords(clase=None):
 
 
 
-def check_hit(coordenadas, hitboard, playerboard):
+def check_hit(coordenadas, hitboard, playerboard_strings):
     """
-    Chequear si hubo un hit con las coordenadas pasadas.
-    Recibe unas coordenadas como x y z
-    Recibe el hitboard del que disparó
-    Recibe el playerboard del que recibió el tiro
+    Verifica si se ha disparado previamente a las coordenadas especificadas en el tablero de disparos.
+
+    Recibe:
+    - coordenadas: Una tupla que contiene las coordenadas (x, y, z) a verificar.
+    - hitboard: Objeto que representa el tablero de disparos, con informacion sobre posiciones ya disparadas.
+    - playerboard: Objeto que representa el tablero del jugador, con informacion sobre las posiciones de los vehiculos.
+
+    Retorna:
+    - hit_str: Devuelve la cadena de la posicion en el tablero del jugador correspondiente a las coordenadas.
+    Si la posicion ya ha sido disparada, imprime un mensaje y devuelve 0.
     """
     x, y, z = coordenadas
     if hitboard.binario[x][y][z] == True:
         print("Ya disparaste a esta posicion!")
-        return 0
+        return None
     
-    hit_str = playerboard.strings[x][y][z]    
+    hit_str = playerboard_strings[x][y][z]    
 
     return hit_str
 
@@ -53,10 +69,12 @@ def check_hit(coordenadas, hitboard, playerboard):
 
 def check_collision(tablero, vehiculo):
     """
-    Chequea si colisiona con un obejto o se va fuera del mapa.
-    Duevuelve True si colisiona o se va fuera del mapa y devuelve
-    False si no colisiona
-    
+    Verifica si los vehiculos colisionan y/o se van del mapa.
+    Recibe:
+    - tablero: es el tablero en el cual se guarda la informacion de la posicion de los vehiculos.
+    - vehiculo: es el vehiculo 
+    Retorna:
+    - bool: Duevuelve True si colisiona o se va fuera del mapa y devuelve y False si no colisiona
     """
     molde = tablero.binario
     posicion = vehiculo.posicion
@@ -77,7 +95,7 @@ def check_collision(tablero, vehiculo):
 
 
 def crear_objetos_jugador(vehiculos_jugador, playerboard_jugador):
-    for i in range(1):
+    for i in range(5):
         nombre = f"BALLOON_{i}" # Nombre del objeto
         vehiculos_jugador[nombre] = vehiculos.Globo(nombre) # Crear objeto y agregarlo al diccionario
         print(f"- Globo {i} (x y z): ", end = '\0') # Pedir coordenadas
@@ -86,7 +104,7 @@ def crear_objetos_jugador(vehiculos_jugador, playerboard_jugador):
         dibujar_playerboard(playerboard_jugador)
 
 
-    for i in range(1):
+    for i in range(2):
         nombre = f"ZEPPELIN_{i}"
         vehiculos_jugador[nombre] = vehiculos.Zeppelin(nombre)
         print(f"- Zeppelin {i} (x y z): ", end = '\0')
@@ -94,7 +112,7 @@ def crear_objetos_jugador(vehiculos_jugador, playerboard_jugador):
         playerboard_jugador.draw_vehicle(vehiculos_jugador[nombre])
         dibujar_playerboard(playerboard_jugador)
         
-    for i in range(1):
+    for i in range(3):
         nombre = f"PLANE_{i}"
         vehiculos_jugador[nombre] = vehiculos.Avion(nombre)
         print(f"- Avion {i} (x y z): ", end = '\0')
@@ -148,10 +166,13 @@ def reproducir_partida(playerboard_jugador, hitboard_jugador, playerboard_comput
         # Turno del jugador
         if turno % 2 == 0:
             print(f"{j}\n{'-' * len(j)}")
-            print("Coordenadas (x y z): ")
+            print("Coordenadas (x y z): ", end='\0')
             coords = get_coords()
-            disparo = check_hit(coords, hitboard_jugador, playerboard_computer)
-            if not disparo or disparo == "EMPTY":
+            disparo = check_hit(coords, hitboard_jugador, playerboard_computer.strings)
+            if not disparo:
+                pass
+
+            elif disparo == "EMPTY":
                 print("Resultado: Errado")
                 hitboard_jugador.shoot_board(coords, None) # Actualizo el hitboard
             
@@ -175,7 +196,7 @@ def reproducir_partida(playerboard_jugador, hitboard_jugador, playerboard_comput
             print(f"{j}\n{'-' * len(j)}")
             coords = computer.next_turn(hitboard_computer.strings)
             print(f"Coordenadas: {coords[0]} {coords[1]} {coords[2]}")
-            disparo = check_hit(coords, hitboard_computer, playerboard_jugador)
+            disparo = check_hit(coords, hitboard_computer, playerboard_jugador.strings)
 
             if not disparo or disparo == "EMPTY":
                 print("Resultado: Errado")
@@ -196,6 +217,7 @@ def reproducir_partida(playerboard_jugador, hitboard_jugador, playerboard_comput
                     
                 else:
                     print("Resultado: Tocado")
+        turno += 1
 
 
 

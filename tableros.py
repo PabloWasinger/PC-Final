@@ -32,7 +32,7 @@ class Tableros():
 class HitBoard(Tableros):
     def __init__(self, jugador):
         super().__init__(jugador)
-        self.strings = np.full((15, 15, 10), '?', dtype='str')
+        self.strings = np.full((15, 15, 10), '?', dtype='object')
         self.titulo = "Player 1 Hitboard"
         self.posicion = (1, 2, 2)
     
@@ -45,7 +45,7 @@ class HitBoard(Tableros):
         if vehiculo: # Si hubo hit
 
             if vehiculo.health == 0: # Si se hundió el vehiculo
-                mask = vehiculo.binario != 0 # Posicion del vehiculo
+                mask = vehiculo.posicion != 0 # Posicion del vehiculo
                 self.binario[mask] = True # Asigna todos las posiciones del vehiculo
                 self.strings[mask] = "SUNK"
 
@@ -59,14 +59,14 @@ class HitBoard(Tableros):
 
         # Dibujar en el tablero el hit si es de un jugador
         if self.jugador == "Player":
-            if vehiculo.issunken(): # Se hundio el vehiculo
+            if vehiculo and vehiculo.health == 0: # Se hundio el vehiculo
                 #Pintar vehiculo (gris)
                 for index in zip(*vehiculo.indices):
                     self.colors[index] = (0, 0, 0, 0.2)
             elif vehiculo: #Hubo hit
-                self.color[x][y][z] = (0, 1, 0, 0.5) # Pintar verde
+                self.colors[x][y][z] = (0, 1, 0, 0.5) # Pintar verde
             else: # No hubo hit
-                self.color[x][y][z] = (1, 0, 0, 0.2) # Pintar rojo
+                self.colors[x][y][z] = (1, 0, 0, 0.2) # Pintar rojo
             funciones.dibujar_hitboard(self)
 
 
@@ -76,8 +76,8 @@ class PlayerBoard(Tableros):
         super().__init__(jugador)
         self.titulo = "Player 1 Board"
         self.posicion = (1, 2, 1)
-        self.strings = np.full((15, 15, 10), "EMPTY", dtype='str')
-        self.vida = 11
+        self.strings = np.full((15, 15, 10), "EMPTY", dtype='object')
+        self.vida = 4
     
     
 
