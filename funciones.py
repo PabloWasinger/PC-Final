@@ -2,6 +2,7 @@ import numpy as np
 import vehiculos
 import matplotlib.pyplot as plt
 import computer
+import probabilitymap
 from typing import Optional
 
 def main():
@@ -12,7 +13,7 @@ def get_coords(clase:Optional[str]=None) -> tuple:
     La funcion solicita al usuario las coordenadas en formato (x,y,z).
 
     Recibe:
-    - clase: que define las coordenadas esperadas. Si es un elevador, se esperan dos coordenadas (x,y),
+    - Define las coordenadas esperadas. Si es un elevador, se esperan dos coordenadas (x,y),
     de lo contrario, se esperan tres (x,y,z).
 
     Retorna:
@@ -48,8 +49,8 @@ def check_hit(coordenadas, hitboard, playerboard_strings):
 
     Recibe:
     - coordenadas: Una tupla que contiene las coordenadas (x, y, z) a verificar.
-    - hitboard: Objeto que representa el tablero de disparos, con informacion sobre posiciones ya disparadas.
-    - playerboard: Objeto que representa el tablero del jugador, con informacion sobre las posiciones de los vehiculos.
+    - hitboard: Un objeto que representa el tablero de disparos, con informacion sobre posiciones ya disparadas.
+    - playerboard: Un objeto que representa el tablero del jugador, con informacion sobre las posiciones de los vehiculos.
 
     Retorna:
     - hit_str: Devuelve la cadena de la posicion en el tablero del jugador correspondiente a las coordenadas.
@@ -71,8 +72,8 @@ def check_collision(tablero, vehiculo):
     """
     Verifica si los vehiculos colisionan y/o se van del mapa.
     Recibe:
-    - tablero: es el tablero en el cual se guarda la informacion de la posicion de los vehiculos.
-    - vehiculo: es el vehiculo 
+    - tablero: Un objeto que representa el tablero en el cual se guarda la informacion de la posicion de los vehiculos.
+    - vehiculo: Un objeto que representa el vehículo.
     Retorna:
     - bool: Duevuelve True si colisiona o se va fuera del mapa y devuelve y False si no colisiona
     """
@@ -95,6 +96,12 @@ def check_collision(tablero, vehiculo):
 
 
 def crear_objetos_jugador(vehiculos_jugador, playerboard_jugador):
+    """
+    La función crea y posiciona los vehiculos en el tablero.
+    Recibe:
+    - vehiculos_jugador: Un diccionario donde se guardan los vehículos del jugador.
+    - playerboard_jugador: Un objeto que representa el tablero del jugador.
+    """
     for i in range(5):
         nombre = f"BALLOON_{i}" # Nombre del objeto
         vehiculos_jugador[nombre] = vehiculos.Globo(nombre) # Crear objeto y agregarlo al diccionario
@@ -137,6 +144,11 @@ def crear_objetos_jugador(vehiculos_jugador, playerboard_jugador):
     
 
 def dibujar_playerboard(playerboard):
+    """
+    Actualiza y visualiza el tablero.
+    Recibe:
+    - playerboard: Un objeto que representa el tablero del jugador.
+    """
     playerboard.plotboard.clear()
     playerboard.dibujar_tablero()
     playerboard.plotboard.voxels(playerboard.binario, facecolors=playerboard.colors, edgecolors='k')
@@ -148,6 +160,11 @@ def dibujar_playerboard(playerboard):
 
 
 def dibujar_hitboard(hitboard):
+    """
+    Actualiza y visualiza el tablero de disparos.
+    Recibe:
+    - hitboard: Un objeto que representa el tablero de disparos.
+    """
     hitboard.plotboard.clear()
     hitboard.dibujar_tablero()
     hitboard.plotboard.voxels(hitboard.binario, facecolors=hitboard.colors, edgecolors='k')
@@ -157,7 +174,20 @@ def dibujar_hitboard(hitboard):
 
 
 def reproducir_partida(playerboard_jugador, hitboard_jugador, playerboard_computer, hitboard_computer, vehiculos_jugador, vehiculos_computadora):
-    """Comienza el juego yendo turno por turno. Devuelve el ganador cuando hunde todos los vehiculos"""
+    """
+    Es la función que permite el desarrollo de la partida.
+    Recibe:
+    - playerboard_jugador: Un objeto que representa el tablero del jugador.
+    - hitboard_jugador: Un objeto que representa el tablero de disparos del jugador.
+    - playeroboard_computer: Un objeto que representa el tablero de la computadora.
+    - hitboard_computer: Un objeto que representa el tablero de disparos de la computadora.
+    - vehiculos_jugador: Un diccionario donde se guardan los vehículos del jugador.
+    - vehiculos_computadora: Un diccionario donde se guardan los vehículos de la computadora.
+    Retorna:
+    - str: Retorna "PLAYER" si gana el jugador, y "COMPUTER" si gana la computadora.
+
+    """
+    probabilidad = probabilitymap.BattleAirComputer()
     turno = 0
     j = "Disparo Jugador 1"
     c = "Disparo Computadora"

@@ -2,6 +2,7 @@ from typing import Any
 import matplotlib.pyplot as plt
 import numpy as np
 import funciones
+from typing import Tuple, Optional, Any
 
 def main():
     pass
@@ -18,7 +19,10 @@ class Tableros():
 
 
     def dibujar_tablero(self):
-        """Dibujar el tablero en la figura usando matplotlib"""
+        """
+        Dibujar el tablero en la figura usando matplotlib
+        Establece la visualización del tablero tridimensional
+        """
         self.plotboard.set_xlabel('x')
         self.plotboard.set_ylabel('y')
         self.plotboard.set_zlabel('z')
@@ -36,9 +40,15 @@ class HitBoard(Tableros):
         self.titulo = "Player 1 Hitboard"
         self.posicion = (1, 2, 2)
     
-    def shoot_board(self, coords:tuple, vehiculo):
-        """Actualiza el hitboard en base si se hundio el vehiculo, hubo o no hubo hit. 
-        En caso de que el tablero sea del jugador, pinta los cambios en pantalla"""
+    def shoot_board(self, coords: Tuple[int, int, int], vehiculo: Optional[Any]):
+        """
+        La función se encarga de realizar el disparo.
+        Toma las coordenadas de un disparo y si hubo o no hit, actualiza el estado del tablero y realiza la 
+        representacion gráfica.
+        Recibe:
+        - coords: Una tupla con las coordenadas del disparo en el tablero.
+        - vehiculo: Un objeto que representa el vehículo.
+        """
 
         x, y, z = coords
 
@@ -82,8 +92,13 @@ class PlayerBoard(Tableros):
     
 
 
-    def draw_vehicle(self, vehiculo):
-        """Dibuja el vehiculo en pantalla con su respectivo color"""
+    def draw_vehicle(self, vehiculo:Any):
+        """
+        La función dibuja el vehiculo en el tablero.
+        Establece la visualización del vehiculo en el tablero.
+        Recibe:
+        - vehiculo: Un objeto que representa el vehículo.
+        """
         mask = vehiculo.posicion != 0
         self.binario[mask] = True
         self.strings[vehiculo.indices] = vehiculo.objeto
@@ -93,8 +108,15 @@ class PlayerBoard(Tableros):
 
 
 
-    def recibir_tiro(self, coords, vehiculo):
-        """Pinta el vehiculo de gris si se hundio, sino pinta la zona del hit de verde."""
+    def recibir_tiro(self, coords: Tuple[int, int, int], vehiculo: Optional[Any]):
+        """
+        La función actualiza el tablero luego de recibir el disparo.
+        Toma las coordenadas de un disparo y si hubo o no hit, actualiza el estado del tablero y realiza la 
+        representacion gráfica.
+        Recibe:
+        - coords: Una tupla con las coordenadas del disparo en el tablero.
+        - vehiculo: Un objeto que representa el vehículo.
+        """
 
         if vehiculo.health == 0: # Si se hundio el vehiculo oscurecerlo
             for index in zip(*vehiculo.indices):
@@ -107,7 +129,9 @@ class PlayerBoard(Tableros):
 
 
     def map_computer_board(self):
-        """Convierte el mapa de strings creado por la computadora a uno binario"""
+        """
+        La función se encarga de mapear el tablero asignando "True" a las posiciones ocupadas.
+        """
         mask = self.strings != "EMPTY"
         self.binario[mask] = True
             
