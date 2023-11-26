@@ -3,6 +3,11 @@ def ran():
     return (random.randint(0,14),random.randint(0,14),random.randint(0,9))
 
 def calculo(dic:dict):
+    """
+    La función realiza un cálculo en un diccionario para obtener coordenadas generadas aleatoriamente.
+    Recibe:
+    - dic: Un diccionario en donde se almacena la frecuencia de ocurrencia de las coordenadas.
+    """
     for i in range (22500):
         coordenadas = ran()
         if coordenadas in dic:

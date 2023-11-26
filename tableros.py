@@ -18,7 +18,7 @@ class Tableros():
         self.colors = np.empty(self.binario.shape, dtype=object) # Tablero con los colores de cada cuadrado
 
 
-    def dibujar_tablero(self):
+    def dibujar_tablero(self)->None:
         """
         Dibujar el tablero en la figura usando matplotlib
         Establece la visualización del tablero tridimensional
@@ -40,7 +40,7 @@ class HitBoard(Tableros):
         self.titulo = "Player 1 Hitboard"
         self.posicion = (1, 2, 2)
     
-    def shoot_board(self, coords: Tuple[int, int, int], vehiculo: Optional[Any]):
+    def shoot_board(self, coords: Tuple[int, int, int], vehiculo: Optional[Any])->None:
         """
         La función se encarga de realizar el disparo.
         Toma las coordenadas de un disparo y si hubo o no hit, actualiza el estado del tablero y realiza la 
@@ -87,12 +87,12 @@ class PlayerBoard(Tableros):
         self.titulo = "Player 1 Board"
         self.posicion = (1, 2, 1)
         self.strings = np.full((15, 15, 10), "EMPTY", dtype='object')
-        self.vida = 4
+        self.vida = 11
     
     
 
 
-    def draw_vehicle(self, vehiculo:Any):
+    def draw_vehicle(self, vehiculo:Any)->None:
         """
         La función dibuja el vehiculo en el tablero.
         Establece la visualización del vehiculo en el tablero.
@@ -108,7 +108,7 @@ class PlayerBoard(Tableros):
 
 
 
-    def recibir_tiro(self, coords: Tuple[int, int, int], vehiculo: Optional[Any]):
+    def recibir_tiro(self, coords: Tuple[int, int, int], vehiculo)->None:
         """
         La función actualiza el tablero luego de recibir el disparo.
         Toma las coordenadas de un disparo y si hubo o no hit, actualiza el estado del tablero y realiza la 
@@ -128,7 +128,7 @@ class PlayerBoard(Tableros):
         funciones.dibujar_playerboard(self)
 
 
-    def map_computer_board(self):
+    def map_computer_board(self)->None:
         """
         La función se encarga de mapear el tablero asignando "True" a las posiciones ocupadas.
         """

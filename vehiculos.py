@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import funciones
 import tableros
+from typing import Any
 
 def main():
     pass
@@ -20,7 +21,12 @@ class Vehiculo():
         self.cuadrados = 0
         self.health = 0
 
-    def position_vehicle(self, tablero):
+    def position_vehicle(self, tablero:Any)->None:
+        """
+        La función posiciona el vehiculo en el tablero.
+        Recibe:
+        - tablero: Un objeto que representa el tablero en el cual se guarda la informacion de la posicion de los vehiculos.
+        """
         offset = self.molde
         check = True
         while check: # While para chequear que no colisione
@@ -34,7 +40,10 @@ class Vehiculo():
         self.indices = np.where(self.posicion) # Variable con los indices de la posicion
 
 
-    def rotar(self):
+    def rotar(self)-> None:
+        """
+        La función se encarga de rotar el vehículo según los grados ingresados.
+        """
         check = True
         while check:
             axes = input("Cuantos grados deseas rotar el vehiculo? (0, 90, 180 o 270): ") # Le pedimos al usuario los grados de rotacion
@@ -117,7 +126,12 @@ class Avion(Vehiculo):
         self.cuadrados = 7
         self.health = 2
 
-    def position_plane(self, tablero):
+    def position_plane(self, tablero: Any)-> None: 
+        """
+        La función posiciona el avión y chequea si hay colisiones.
+        Recibe:
+        - tablero: Un objeto que representa el tablero en el cual se guarda la informacion de la posicion de los vehiculos.
+        """
         body, wing, tail = self.body, self.wing, self.tail
         check = True
         while check:

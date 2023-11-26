@@ -3,7 +3,7 @@ import vehiculos
 import matplotlib.pyplot as plt
 import computer
 import probabilitymap
-from typing import Optional
+from typing import Optional,Any
 
 def main():
     pass
@@ -31,7 +31,10 @@ def get_coords(clase:Optional[str]=None) -> tuple:
             else:
                 x, y, z = map(int, splitcoords)
 
-            break
+            if (0 <= x < 15) and (0 <= y < 15) and (0 <= z < 10):
+                break
+            else:
+                print("Fuera del tablero!\nReingresar coordenadas: ", end='\0')
 
         except:
             if clase == "elevador":
@@ -43,7 +46,7 @@ def get_coords(clase:Optional[str]=None) -> tuple:
 
 
 
-def check_hit(coordenadas, hitboard, playerboard_strings):
+def check_hit(coordenadas:tuple, hitboard, playerboard_strings):
     """
     Verifica si se ha disparado previamente a las coordenadas especificadas en el tablero de disparos.
 
@@ -68,7 +71,7 @@ def check_hit(coordenadas, hitboard, playerboard_strings):
     
 
 
-def check_collision(tablero, vehiculo):
+def check_collision(tablero, vehiculo:Any)-> bool:
     """
     Verifica si los vehiculos colisionan y/o se van del mapa.
     Recibe:
@@ -95,7 +98,7 @@ def check_collision(tablero, vehiculo):
 
 
 
-def crear_objetos_jugador(vehiculos_jugador, playerboard_jugador):
+def crear_objetos_jugador(vehiculos_jugador:dict, playerboard_jugador)->None:
     """
     La función crea y posiciona los vehiculos en el tablero.
     Recibe:
@@ -173,7 +176,7 @@ def dibujar_hitboard(hitboard):
 
 
 
-def reproducir_partida(playerboard_jugador, hitboard_jugador, playerboard_computer, hitboard_computer, vehiculos_jugador, vehiculos_computadora):
+def reproducir_partida(playerboard_jugador, hitboard_jugador, playerboard_computer, hitboard_computer, vehiculos_jugador:dict, vehiculos_computadora:dict)->str:
     """
     Es la función que permite el desarrollo de la partida.
     Recibe:
@@ -188,6 +191,7 @@ def reproducir_partida(playerboard_jugador, hitboard_jugador, playerboard_comput
 
     """
     probabilidad = probabilitymap.BattleAirComputer()
+    probabilidad.define_plot_map()
     turno = 0
     j = "Disparo Jugador 1"
     c = "Disparo Computadora"
@@ -224,7 +228,9 @@ def reproducir_partida(playerboard_jugador, hitboard_jugador, playerboard_comput
         # Turno de la computadora
         else:
             print(f"{j}\n{'-' * len(j)}")
-            coords = computer.next_turn(hitboard_computer.strings)
+            probabilidad.gen_prob_map(hitboard_computer.strings)
+            coords = probabilidad.get_shooting_coords()
+            probabilidad.refresh_plot_map()
             print(f"Coordenadas: {coords[0]} {coords[1]} {coords[2]}")
             disparo = check_hit(coords, hitboard_computer, playerboard_jugador.strings)
 
